@@ -1,7 +1,15 @@
+sudo: required
+
 language: go
 
 go:
   - 1.7.x
+
+services:
+   - docker
+
+before_install:
+  - docker pull eawsy/aws-lambda-go-shim:latest
 
 install:
   - go get github.com/aws/aws-sdk-go/service/s3
