@@ -1,26 +1,46 @@
 sudo: required
-
 language: go
-
 go:
-  - 1.7.x
+- 1.7.x
 services:
-  - docker
+- docker
 before_install:
-  - docker pull eawsy/aws-lambda-go-shim:latest
+- docker pull eawsy/aws-lambda-go-shim:latest
 install:
-  - go get golang.org/x/tools/cmd/cover
-  - go get github.com/mattn/goveralls
-  - go get github.com/aws/aws-sdk-go/service/s3
-  - go get github.com/eawsy/aws-lambda-go-net/service/lambda/runtime/net
-  - go get github.com/eawsy/aws-lambda-go-net/service/lambda/runtime/net/apigatewayproxy
-  - go get github.com/aws/aws-sdk-go/aws
-  - go get github.com/aws/aws-sdk-go/aws/session
-  - go get github.com/aws/aws-sdk-go/service/s3
+- go get golang.org/x/tools/cmd/cover
+- go get github.com/mattn/goveralls
+- go get github.com/aws/aws-sdk-go/service/s3
+- go get github.com/eawsy/aws-lambda-go-net/service/lambda/runtime/net
+- go get github.com/eawsy/aws-lambda-go-net/service/lambda/runtime/net/apigatewayproxy
+- go get github.com/aws/aws-sdk-go/aws
+- go get github.com/aws/aws-sdk-go/aws/session
+- go get github.com/aws/aws-sdk-go/service/s3
 script:
-  - go test -v -covermode=count -coverprofile=coverage.out
-  - "$HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken
+- go test -v -covermode=count -coverprofile=coverage.out
+- "$HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken
   $COVERALLS_TOKEN"
 env:
   global:
     secure: Sx44Fhersy4KjklsqIDvH8vfBIeooLWpsGy5JnJVkwAFmWMBHerKB7KR7swyqLhmKn82CZDhjSnLXw6ycg/xb+RGI/uA2yLOnvQf5yRJ4krVJB7BXzU/gHAjnYqyvQisJOD5Un/0nHHpMKql9NYN9VpS8LhgIAbGpHDU++k2Vr8crpuhWAWZDktbazSshs8q35bIULFnOaOCwyqLDmb88KR4d4cJmCZQj/UuOEJSj6N3F9aJShHvKb38zNPa5srx3pShNXdwSz9r/Yrh8sDoU+v3OSMY7n/36pDWOG6aL+vWPgGx27LQ9BUwoQ2DyvGrUnQfSj/t7Kp73VFwjrzlDElKC3x6F/O8KFyOQQuobUk+43Kr2M3BCMq/ZMG51mNwcgzm+ABRqBB+m513XbzcYr8ttyyoaZLOX1S1TMmV6ScMsSuOhnkSHlshn2pk2bw6G1dp7db57B1Hh0Q//etdHoT4Hkhfnn7DfdXJ8SjfQJghUpgwwHGHcHpBDz7YIprAuTVbBlvWEAFNN4r8tc8EM0DCDl8+SPd9o0lTqQBPAq6lVNsenmszuyFl3HM6Gzy6kn1hnWnwlXd4YBXUkHPnB1tR4hGjR2xeEjJ1zQir4ez16I8YZkF1equLEy+WlyanwSYjSp4HMaZmQ/CYPvXUlMTKxgwJAum5l682LnSneUQ=
+
+deploy:
+  - provider: s3
+    access_key_id: AKIAJIX2M3ECH5SFUVSA
+    secret_access_key:
+      secure:   EQUuTTXlMLpCZC9w7cahlsMhhofSdAB9GkORy91HDPC8z6Cf8DJMreHeqd6yy3yfILvyKZVfZE0QWcPmCrettGk9HO2Y5LtWv8SqheFXm/h2Lacfj00w3s4FZCx9dI9KRQJe17dUJoMnKRtg8hhcmL0TiCLXSxmxvGAW6HwryW66dlmAJ1RqLpGWr2i0zISXnrr6N4HttLZwVrSEJKsWeqOc+JUIqWgT5HvdYAB5AvG+9MFiw5Un9kh7Jqd2Tr6rzpTzYlFxLT50Jji3EPiM+bSe3AaDoHmzE73OlD/0gqx7Nkpn0dtFJB0qhGYnodBThdVFuoNyq6OX/EkQ7oULBzntxgQ5arPhjmREElPB+YRfgaPloQj+KnS6H6J/vz9/Uxjh2Z1ry0k1stDRt5LWZ7lJo/WKVhUKewBa+GstmbvEyDCP9tqzizoXrVN42GGpq1oheJ+sKPOwfeQP2sfEohaH+9lle5GctY7VP41xVkUe3OztRwZUS+YKxxP8wGh23e29IuJjdO1MbofFDAwLsJtW+TzjHMti1Pb3aDTs9Df/UACBh4QUlMyjh3SViMsm+T6Zfbo2LlcRn0JujQF0WyJ9OeNrHtf1BCT9RWElqXCSrNug1i3T/xHBeFBHsMXYP2afK4LK4Ieqm0tkQtTa/45VsMdvRKWAxtunUK1LL1s=
+    bucket: sknk.ws
+    region: ap-southeast-2
+    skip_cleanup: true
+    upload-dir: assets
+    local_dir: release
+    acl: public_read
+    on:
+      repo: michaelmcallister/serverless-url-shortener
+  - provider: releases
+    api_key:
+      secure: I9y1HuhAnhTx7DrP4ce90VyrKEnuln2MoYpXJ17Z7K3N0s0IJyn9iokD4r5DTlLkoHuTg4S8Dbbl7cHSYhB5fZDSq7NFr4aIRpsdSS3zD4kWsf5tFCv1j8BV5nHvAtS2SIIY42dCH6ut5RePhjdLw9uYiUCSvX0PKe2Fff4O+MYLrR2C3ZGAQuH7a/0qjasd/FhSCs4Sww3aSSbSIw9/1VDhU8yAF2UR2tQfZEwWpr276l+2rByvVbq2BvIOSVszT9NHhQW4LnE0qAJpfQz66qV4uPEwUWNUD1NLPo5uVgSBqgYcjPyNvGC8fkVRjyFjf052tcQ3w3p/i3/6X3aT/SPkUJjy3DzQmG6BbmYrKDRG1qvLjQYFBBl8wJ2bVuln3kPA2/i6KfBpijADLt5lfOIopgOXPtYu2bPLoVPcJPlweNZlHLiTZNl6lNiqaLoaMXZA3edk2W2BncuRfaZ6F+7qax/+NQ+0fjKIs6O7cBNYI6zr7tyf50rebQohkCZ9nbMiIhhShaFWZ5YlPRGUQUErTNELV14hmciU9hewT9NHxpWGdIg/sqXLDm/A5orrT77QWxL60KU9LZi7947BivaNQeIt1b54rw7FqFND1orvVh3IEr0dEo2upaEFT3OPU5EUdxZqPWDmt7axqwRSuHISWh7IZ0t6qk3t8hipT+8=
+    skip_cleanup: true
+    provider: releases
+    file: release/handler.zip
+    on:
+      repo: michaelmcallister/serverless-url-shortener

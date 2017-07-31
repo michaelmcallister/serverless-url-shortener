@@ -28,6 +28,7 @@
 HANDLER ?= handler
 PACKAGE ?= $(HANDLER)
 GOPATH  ?= $(HOME)/go
+RELEASE_DIR ?= release
 
 docker:
 	@docker run --rm                                                             \
@@ -41,7 +42,7 @@ docker:
 
 .PHONY: docker
 
-all: build pack perm
+all: build pack copy perm
 
 .PHONY: all
 
@@ -55,12 +56,20 @@ pack:
 
 .PHONY: pack
 
+copy:
+	  @mkdir -p $(RELEASE_DIR)
+		@cp $(PACKAGE).zip $(RELEASE_DIR)
+		
+.PHONY: copy
+
 perm:
 	@chown $(shell stat -c '%u:%g' .) $(HANDLER).so $(PACKAGE).zip
+	@chown -R $(shell stat -c '%u:%g' .) $(RELEASE_DIR)
 
 .PHONY: perm
 
 clean:
 	@rm -rf $(HANDLER).so $(PACKAGE).zip
+	@rm -rf $(RELEASE)
 
 .PHONY: clean
