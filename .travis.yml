@@ -4,17 +4,23 @@ language: go
 
 go:
   - 1.7.x
-
 services:
-   - docker
-
+  - docker
 before_install:
   - docker pull eawsy/aws-lambda-go-shim:latest
-
 install:
+  - go get golang.org/x/tools/cmd/cover
+  - go get github.com/mattn/goveralls
   - go get github.com/aws/aws-sdk-go/service/s3
   - go get github.com/eawsy/aws-lambda-go-net/service/lambda/runtime/net
   - go get github.com/eawsy/aws-lambda-go-net/service/lambda/runtime/net/apigatewayproxy
   - go get github.com/aws/aws-sdk-go/aws
   - go get github.com/aws/aws-sdk-go/aws/session
   - go get github.com/aws/aws-sdk-go/service/s3
+script:
+  - go test -v -covermode=count -coverprofile=coverage.out
+  - "$HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken
+  $COVERALLS_TOKEN"
+env:
+  global:
+    secure: Sx44Fhersy4KjklsqIDvH8vfBIeooLWpsGy5JnJVkwAFmWMBHerKB7KR7swyqLhmKn82CZDhjSnLXw6ycg/xb+RGI/uA2yLOnvQf5yRJ4krVJB7BXzU/gHAjnYqyvQisJOD5Un/0nHHpMKql9NYN9VpS8LhgIAbGpHDU++k2Vr8crpuhWAWZDktbazSshs8q35bIULFnOaOCwyqLDmb88KR4d4cJmCZQj/UuOEJSj6N3F9aJShHvKb38zNPa5srx3pShNXdwSz9r/Yrh8sDoU+v3OSMY7n/36pDWOG6aL+vWPgGx27LQ9BUwoQ2DyvGrUnQfSj/t7Kp73VFwjrzlDElKC3x6F/O8KFyOQQuobUk+43Kr2M3BCMq/ZMG51mNwcgzm+ABRqBB+m513XbzcYr8ttyyoaZLOX1S1TMmV6ScMsSuOhnkSHlshn2pk2bw6G1dp7db57B1Hh0Q//etdHoT4Hkhfnn7DfdXJ8SjfQJghUpgwwHGHcHpBDz7YIprAuTVbBlvWEAFNN4r8tc8EM0DCDl8+SPd9o0lTqQBPAq6lVNsenmszuyFl3HM6Gzy6kn1hnWnwlXd4YBXUkHPnB1tR4hGjR2xeEjJ1zQir4ez16I8YZkF1equLEy+WlyanwSYjSp4HMaZmQ/CYPvXUlMTKxgwJAum5l682LnSneUQ=
