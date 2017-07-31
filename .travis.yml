@@ -33,11 +33,15 @@ deploy:
     region: ap-southeast-2
     skip_cleanup: true
     upload-dir: assets
-    local_dir: release
+    local_dir: "$TRAVIS_BUILD_DIR/release"
     acl: public_read
+    on:
+      branch: master
   - provider: releases
     api_key:
       secure: I9y1HuhAnhTx7DrP4ce90VyrKEnuln2MoYpXJ17Z7K3N0s0IJyn9iokD4r5DTlLkoHuTg4S8Dbbl7cHSYhB5fZDSq7NFr4aIRpsdSS3zD4kWsf5tFCv1j8BV5nHvAtS2SIIY42dCH6ut5RePhjdLw9uYiUCSvX0PKe2Fff4O+MYLrR2C3ZGAQuH7a/0qjasd/FhSCs4Sww3aSSbSIw9/1VDhU8yAF2UR2tQfZEwWpr276l+2rByvVbq2BvIOSVszT9NHhQW4LnE0qAJpfQz66qV4uPEwUWNUD1NLPo5uVgSBqgYcjPyNvGC8fkVRjyFjf052tcQ3w3p/i3/6X3aT/SPkUJjy3DzQmG6BbmYrKDRG1qvLjQYFBBl8wJ2bVuln3kPA2/i6KfBpijADLt5lfOIopgOXPtYu2bPLoVPcJPlweNZlHLiTZNl6lNiqaLoaMXZA3edk2W2BncuRfaZ6F+7qax/+NQ+0fjKIs6O7cBNYI6zr7tyf50rebQohkCZ9nbMiIhhShaFWZ5YlPRGUQUErTNELV14hmciU9hewT9NHxpWGdIg/sqXLDm/A5orrT77QWxL60KU9LZi7947BivaNQeIt1b54rw7FqFND1orvVh3IEr0dEo2upaEFT3OPU5EUdxZqPWDmt7axqwRSuHISWh7IZ0t6qk3t8hipT+8=
     skip_cleanup: true
     provider: releases
-    file: release/handler.zip
+    on:
+      branch: master
+    file: "$TRAVIS_BUILD_DIR/release/handler.zip"
